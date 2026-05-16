@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "ts-rn-expo",
+    "slug": "ts-rn-expo",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
