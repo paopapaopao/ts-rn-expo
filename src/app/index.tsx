@@ -1,22 +1,24 @@
+import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-const App = () => {
-  return (
-    <View style={styles.container}>
-      <Text>ts-rn-expo</Text>
-      <StatusBar style='auto' />
-    </View>
-  );
-};
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
+    padding: 8,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default App;
+const HomePage = () => {
+  return (
+    <SafeAreaView style={styles.page}>
+      <StatusBar style='auto' />
+      <Link href='/posts'>Posts Page</Link>
+    </SafeAreaView>
+  );
+};
+
+export default HomePage;
