@@ -1,16 +1,10 @@
 import { useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
-  page: {
-    padding: 8,
-    flex: 1,
-  },
   card: {
     padding: 8,
     gap: 8,
@@ -56,14 +50,13 @@ const PostPage = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.page}>
-      <StatusBar style='auto' />
+    <>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
         <Text style={styles.title}>{post?.title}</Text>
         <Text style={styles.body}>{post?.body}</Text>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 

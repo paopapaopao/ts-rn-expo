@@ -1,16 +1,10 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
-  page: {
-    padding: 8,
-    flex: 1,
-  },
   card: {
     padding: 8,
     gap: 8,
@@ -67,8 +61,7 @@ const PostsPage = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.page}>
-      <StatusBar style='auto' />
+    <>
       <FlatList
         data={posts}
         renderItem={({ item: post }) => (
@@ -90,7 +83,7 @@ const PostsPage = () => {
         }
         ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
       />
-    </SafeAreaView>
+    </>
   );
 };
 
