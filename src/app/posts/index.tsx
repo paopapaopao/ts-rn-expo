@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
@@ -71,13 +72,14 @@ const PostsPage = () => {
       <FlatList
         data={posts}
         renderItem={({ item: post }) => (
-          <View
+          <Link
             style={styles.card}
             key={post.id}
+            href={`/posts/${post.id}`}
           >
             <Text style={styles.title}>{post.title}</Text>
             <Text style={styles.body}>{post.body}</Text>
-          </View>
+          </Link>
         )}
         ItemSeparatorComponent={<View style={styles.spacer} />}
         ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
