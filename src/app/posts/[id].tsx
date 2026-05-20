@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-type Post = {
-  id: number;
-  title: string;
-  body: string;
-};
+import { Post } from '../../lib/types';
 
 const styles = StyleSheet.create({
   page: {
