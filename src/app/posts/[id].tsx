@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Post } from '../../lib/types';
+import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
   page: {
