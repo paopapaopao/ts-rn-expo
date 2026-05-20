@@ -1,7 +1,8 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PostCard } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
@@ -10,13 +11,6 @@ const styles = StyleSheet.create({
     gap: 8,
     borderWidth: 1,
     borderRadius: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  body: {
-    fontSize: 16,
   },
   spacer: {
     height: 16,
@@ -66,12 +60,13 @@ const PostsPage = () => {
         data={posts}
         renderItem={({ item: post }) => (
           <Link
-            style={styles.card}
             key={post.id}
             href={`/posts/${post.id}`}
+            asChild
           >
-            <Text style={styles.title}>{post.title}</Text>
-            <Text style={styles.body}>{post.body}</Text>
+            <Pressable style={styles.card}>
+              <PostCard post={post} />
+            </Pressable>
           </Link>
         )}
         ItemSeparatorComponent={<View style={styles.spacer} />}
