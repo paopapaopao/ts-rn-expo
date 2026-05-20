@@ -1,7 +1,5 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   page: {
@@ -13,12 +11,7 @@ const styles = StyleSheet.create({
 });
 
 const HomePage = () => {
-  return (
-    <SafeAreaView style={styles.page}>
-      <StatusBar style='auto' />
-      <Link href='/posts'>Posts Page</Link>
-    </SafeAreaView>
-  );
+  return <Link href='/posts'>Posts Page</Link>;
 };
 
 export default HomePage;

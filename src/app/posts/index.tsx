@@ -1,8 +1,6 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Post } from '@/lib/types';
 
@@ -67,8 +65,7 @@ const PostsPage = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.page}>
-      <StatusBar style='auto' />
+    <>
       <FlatList
         data={posts}
         renderItem={({ item: post }) => (
@@ -90,7 +87,7 @@ const PostsPage = () => {
         }
         ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
       />
-    </SafeAreaView>
+    </>
   );
 };
 
