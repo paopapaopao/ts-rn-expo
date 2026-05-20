@@ -5,10 +5,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
-  page: {
-    padding: 8,
-    flex: 1,
-  },
   card: {
     padding: 8,
     gap: 8,
