@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { PostCard } from '@/components';
@@ -18,36 +18,54 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
+  loadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 20,
+    fontStyle: 'italic',
+  },
 });
 
 const PostPage = () => {
   const { id } = useLocalSearchParams();
 
-  const [post, setPost] = useState<Post | null>(null);
+  const { isPending, error, data } = useQuery({
+    queryKey: ['posts', id],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://dummyjson.com/posts/${id}?limit=32&select=id,title,body`,
+      );
 
-  useEffect(() => {
-    const readPost = async () => {
-      try {
-        const response = await fetch(
-          `https://dummyjson.com/posts/${id}?limit=32&select=id,title,body`,
-        );
+      const post: Post = await response.json();
 
-        const post: Post = await response.json();
+      return post;
+    },
+  });
 
-        setPost(post);
-      } catch (error) {
-        console.error(`readPost: ${error}`);
-      }
-    };
+  if (isPending) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
-    readPost();
-  }, []);
+  if (error !== null) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
+      </View>
+    );
+  }
 
   return (
     <>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
-        <PostCard post={post} />
+        <PostCard post={data ?? null} />
       </View>
     </>
   );

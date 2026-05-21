@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Provider from '@/provider';
+
 const styles = StyleSheet.create({
   page: {
     padding: 8,
@@ -12,10 +14,12 @@ const styles = StyleSheet.create({
 
 const Layout = () => {
   return (
-    <SafeAreaView style={styles.page}>
-      <StatusBar style='auto' />
-      <Slot />
-    </SafeAreaView>
+    <Provider>
+      <SafeAreaView style={styles.page}>
+        <StatusBar style='auto' />
+        <Slot />
+      </SafeAreaView>
+    </Provider>
   );
 };
 
