@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 });
 
 const PostsPage = () => {
-  const { isPending, data } = useQuery({
+  const { isPending, error, data } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await fetch(
@@ -60,6 +60,14 @@ const PostsPage = () => {
     return (
       <View style={styles.loadingView}>
         <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error !== null) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
       </View>
     );
   }

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 const PostPage = () => {
   const { id } = useLocalSearchParams();
 
-  const { isPending, data } = useQuery({
+  const { isPending, error, data } = useQuery({
     queryKey: ['posts', id],
     queryFn: async () => {
       const response = await fetch(
@@ -49,6 +49,14 @@ const PostPage = () => {
     return (
       <View style={styles.loadingView}>
         <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error !== null) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
       </View>
     );
   }
