@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -43,18 +43,40 @@ const styles = StyleSheet.create({
 });
 
 const PostsPage = () => {
-  const { isPending, error, data } = useQuery({
+  const {
+    isPending,
+    isError,
+    error,
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
     queryKey: ['posts'],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       const response = await fetch(
-        'https://dummyjson.com/posts?limit=32&select=id,title,body',
+        `https://dummyjson.com/posts?limit=10&skip=${pageParam}&select=id,title,body`,
       );
 
-      const { posts }: { posts: Post[] } = await response.json();
+      const data: {
+        posts: Post[];
+        total: number;
+        skip: number;
+        limit: number;
+      } = await response.json();
 
-      return posts;
+      return data;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const skip = lastPage.skip + 10;
+      const pageParam = skip < lastPage.total ? skip : null;
+
+      return pageParam;
     },
   });
+
+  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   if (isPending) {
     return (
@@ -64,7 +86,7 @@ const PostsPage = () => {
     );
   }
 
-  if (error !== null) {
+  if (isError) {
     return (
       <View style={styles.loadingView}>
         <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
@@ -75,7 +97,7 @@ const PostsPage = () => {
   return (
     <>
       <FlatList
-        data={data}
+        data={posts}
         renderItem={({ item: post }) => (
           <Link
             key={post.id}
@@ -90,11 +112,17 @@ const PostsPage = () => {
         ItemSeparatorComponent={<View style={styles.spacer} />}
         ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
         ListFooterComponent={
-          data.length > 0 ? (
+          posts.length > 0 ? (
             <Text style={styles.footer}>End of List</Text>
           ) : null
         }
         ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
       />
     </>
   );
