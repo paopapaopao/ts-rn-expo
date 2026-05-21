@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
 const PostsPage = () => {
   const {
     isPending,
+    isError,
     error,
     data,
     hasNextPage,
@@ -85,7 +86,7 @@ const PostsPage = () => {
     );
   }
 
-  if (error !== null) {
+  if (isError) {
     return (
       <View style={styles.loadingView}>
         <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
