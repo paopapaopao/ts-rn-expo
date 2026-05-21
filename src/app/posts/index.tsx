@@ -31,10 +31,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 24,
   },
+  loadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 20,
+    fontStyle: 'italic',
+  },
 });
 
 const PostsPage = () => {
-  const { data } = useQuery({
+  const { isPending, data } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await fetch(
@@ -45,8 +54,15 @@ const PostsPage = () => {
 
       return posts;
     },
-    initialData: [],
   });
+
+  if (isPending) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <>

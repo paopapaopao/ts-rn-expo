@@ -18,12 +18,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
+  loadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 20,
+    fontStyle: 'italic',
+  },
 });
 
 const PostPage = () => {
   const { id } = useLocalSearchParams();
 
-  const { data } = useQuery({
+  const { isPending, data } = useQuery({
     queryKey: ['posts', id],
     queryFn: async () => {
       const response = await fetch(
@@ -34,14 +43,21 @@ const PostPage = () => {
 
       return post;
     },
-    initialData: null,
   });
+
+  if (isPending) {
+    return (
+      <View style={styles.loadingView}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
-        <PostCard post={data} />
+        <PostCard post={data ?? null} />
       </View>
     </>
   );
