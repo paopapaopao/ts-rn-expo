@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { PostCard } from '@/components';
@@ -23,31 +23,25 @@ const styles = StyleSheet.create({
 const PostPage = () => {
   const { id } = useLocalSearchParams();
 
-  const [post, setPost] = useState<Post | null>(null);
+  const { data } = useQuery({
+    queryKey: ['posts', id],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://dummyjson.com/posts/${id}?limit=32&select=id,title,body`,
+      );
 
-  useEffect(() => {
-    const readPost = async () => {
-      try {
-        const response = await fetch(
-          `https://dummyjson.com/posts/${id}?limit=32&select=id,title,body`,
-        );
+      const post: Post = await response.json();
 
-        const post: Post = await response.json();
-
-        setPost(post);
-      } catch (error) {
-        console.error(`readPost: ${error}`);
-      }
-    };
-
-    readPost();
-  }, []);
+      return post;
+    },
+    initialData: null,
+  });
 
   return (
     <>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
-        <PostCard post={post} />
+        <PostCard post={data} />
       </View>
     </>
   );

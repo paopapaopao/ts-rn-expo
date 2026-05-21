@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { PostCard } from '@/components';
@@ -34,30 +34,24 @@ const styles = StyleSheet.create({
 });
 
 const PostsPage = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const { data } = useQuery({
+    queryKey: ['posts'],
+    queryFn: async () => {
+      const response = await fetch(
+        'https://dummyjson.com/posts?limit=32&select=id,title,body',
+      );
 
-  useEffect(() => {
-    const readPosts = async () => {
-      try {
-        const response = await fetch(
-          'https://dummyjson.com/posts?limit=32&select=id,title,body',
-        );
+      const { posts }: { posts: Post[] } = await response.json();
 
-        const { posts }: { posts: Post[] } = await response.json();
-
-        setPosts(posts);
-      } catch (error) {
-        console.error(`readPosts: ${error}`);
-      }
-    };
-
-    readPosts();
-  }, []);
+      return posts;
+    },
+    initialData: [],
+  });
 
   return (
     <>
       <FlatList
-        data={posts}
+        data={data}
         renderItem={({ item: post }) => (
           <Link
             key={post.id}
@@ -72,7 +66,7 @@ const PostsPage = () => {
         ItemSeparatorComponent={<View style={styles.spacer} />}
         ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
         ListFooterComponent={
-          posts.length > 0 ? (
+          data.length > 0 ? (
             <Text style={styles.footer}>End of List</Text>
           ) : null
         }
