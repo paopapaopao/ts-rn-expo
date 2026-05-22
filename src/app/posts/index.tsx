@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { PostCard } from '@/components';
+import { PostCard, PostCardSkeleton } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
@@ -112,9 +112,18 @@ const PostsPage = () => {
         ItemSeparatorComponent={<View style={styles.spacer} />}
         ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
         ListFooterComponent={
-          posts.length > 0 ? (
+          hasNextPage && isFetchingNextPage ? (
+            <View>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <View key={index}>
+                  <View style={styles.spacer} />
+                  <PostCardSkeleton />
+                </View>
+              ))}
+            </View>
+          ) : (
             <Text style={styles.footer}>End of List</Text>
-          ) : null
+          )
         }
         ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
         onEndReached={() => {
