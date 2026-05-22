@@ -54,6 +54,8 @@ const PostsPage = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    refetch,
+    isRefetching,
   } = useInfiniteQuery({
     queryKey: ['posts'],
     queryFn: async ({ pageParam }) => {
@@ -138,6 +140,8 @@ const PostsPage = () => {
         }
       }}
       onEndReachedThreshold={0.5}
+      refreshing={isRefetching}
+      onRefresh={refetch}
     />
   );
 };
