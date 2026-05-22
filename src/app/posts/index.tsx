@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { PostCard } from '@/components';
+import { PostCard, PostCardSkeleton } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
@@ -42,6 +42,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const ItemSeparatorComponent = () => <View style={styles.spacer} />;
+const ListHeaderComponent = () => <Text style={styles.header}>Post List</Text>;
+
 const PostsPage = () => {
   const {
     isPending,
@@ -80,9 +83,13 @@ const PostsPage = () => {
 
   if (isPending) {
     return (
-      <View style={styles.loadingView}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
+      <FlatList
+        data={Array.from({ length: 10 }, (_, index) => index)}
+        renderItem={() => <PostCardSkeleton />}
+        keyExtractor={(item) => String(item)}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListHeaderComponent={ListHeaderComponent}
+      />
     );
   }
 
@@ -95,36 +102,43 @@ const PostsPage = () => {
   }
 
   return (
-    <>
-      <FlatList
-        data={posts}
-        renderItem={({ item: post }) => (
-          <Link
-            key={post.id}
-            href={`/posts/${post.id}`}
-            asChild
-          >
-            <Pressable style={styles.card}>
-              <PostCard post={post} />
-            </Pressable>
-          </Link>
-        )}
-        ItemSeparatorComponent={<View style={styles.spacer} />}
-        ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
-        ListFooterComponent={
-          posts.length > 0 ? (
-            <Text style={styles.footer}>End of List</Text>
-          ) : null
+    <FlatList
+      data={posts}
+      renderItem={({ item: post }) => (
+        <Link
+          href={`/posts/${post.id}`}
+          asChild
+        >
+          <Pressable style={styles.card}>
+            <PostCard post={post} />
+          </Pressable>
+        </Link>
+      )}
+      keyExtractor={(post) => String(post.id)}
+      ItemSeparatorComponent={ItemSeparatorComponent}
+      ListHeaderComponent={ListHeaderComponent}
+      ListFooterComponent={
+        hasNextPage && isFetchingNextPage ? (
+          <View>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <View key={index}>
+                <ItemSeparatorComponent />
+                <PostCardSkeleton />
+              </View>
+            ))}
+          </View>
+        ) : (
+          <Text style={styles.footer}>End of List</Text>
+        )
+      }
+      ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
+      onEndReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
-        ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
-        onEndReached={() => {
-          if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-          }
-        }}
-        onEndReachedThreshold={0.5}
-      />
-    </>
+      }}
+      onEndReachedThreshold={0.5}
+    />
   );
 };
 
