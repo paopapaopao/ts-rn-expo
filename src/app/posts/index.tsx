@@ -80,9 +80,13 @@ const PostsPage = () => {
 
   if (isPending) {
     return (
-      <View style={styles.loadingView}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
+      <FlatList
+        data={Array.from({ length: 10 }, (_, index) => index)}
+        renderItem={() => <PostCardSkeleton />}
+        keyExtractor={(item) => item.toString()}
+        ItemSeparatorComponent={() => <View style={styles.spacer} />}
+        ListHeaderComponent={<Text style={styles.header}>Post List</Text>}
+      />
     );
   }
 
