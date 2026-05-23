@@ -1,5 +1,7 @@
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
+import { useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { PostCard, PostCardSkeleton } from '@/components';
@@ -44,6 +46,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontStyle: 'italic',
   },
+  fab: {
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '50%',
+    backgroundColor: 'gray',
+  },
 });
 
 const ItemSeparatorComponent = () => <View style={styles.spacer} />;
@@ -85,6 +98,9 @@ const HomePage = () => {
     },
   });
 
+  const [isShown, setIsShown] = useState(false);
+  const flatListRef = useRef<FlatList<Post>>(null);
+
   if (isPending) {
     return (
       <FlatList
@@ -110,6 +126,12 @@ const HomePage = () => {
   return (
     <View style={styles.page}>
       <FlatList
+        ref={flatListRef}
+        onScroll={(event) => {
+          const offSetY = event.nativeEvent.contentOffset.y;
+
+          setIsShown(offSetY > 400);
+        }}
         data={posts}
         renderItem={({ item: post }) => (
           <Link
@@ -148,6 +170,20 @@ const HomePage = () => {
         refreshing={isRefetching}
         onRefresh={refetch}
       />
+      {isShown && (
+        <Pressable
+          style={styles.fab}
+          onPress={() => {
+            flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+          }}
+        >
+          <MaterialDesignIcons
+            name='arrow-up'
+            size={24}
+            color='white'
+          />
+        </Pressable>
+      )}
     </View>
   );
 };
