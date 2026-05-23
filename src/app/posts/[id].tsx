@@ -2,10 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { PostCard } from '@/components';
+import { PostCard, PostCardSkeleton } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
+  page: {
+    padding: 8,
+    flex: 1,
+  },
   header: {
     marginBlockEnd: 16,
     alignSelf: 'center',
@@ -32,7 +36,7 @@ const styles = StyleSheet.create({
 const PostPage = () => {
   const { id } = useLocalSearchParams();
 
-  const { isPending, error, data } = useQuery({
+  const { isPending, isError, error, data } = useQuery({
     queryKey: ['posts', id],
     queryFn: async () => {
       const response = await fetch(
@@ -47,13 +51,14 @@ const PostPage = () => {
 
   if (isPending) {
     return (
-      <View style={styles.loadingView}>
-        <Text style={styles.loadingText}>Loading...</Text>
+      <View style={styles.page}>
+        <Text style={styles.header}>{`Post ${id} Details`}</Text>
+        <PostCardSkeleton />
       </View>
     );
   }
 
-  if (error !== null) {
+  if (isError) {
     return (
       <View style={styles.loadingView}>
         <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
@@ -62,12 +67,12 @@ const PostPage = () => {
   }
 
   return (
-    <>
+    <View style={styles.page}>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
         <PostCard post={data ?? null} />
       </View>
-    </>
+    </View>
   );
 };
 
