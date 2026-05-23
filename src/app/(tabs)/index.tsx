@@ -6,6 +6,10 @@ import { PostCard, PostCardSkeleton } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
+  page: {
+    padding: 8,
+    flex: 1,
+  },
   card: {
     padding: 8,
     gap: 8,
@@ -104,45 +108,47 @@ const HomePage = () => {
   const posts = data.pages.flatMap((page) => page.posts);
 
   return (
-    <FlatList
-      data={posts}
-      renderItem={({ item: post }) => (
-        <Link
-          href={`/posts/${post.id}`}
-          asChild
-        >
-          <Pressable style={styles.card}>
-            <PostCard post={post} />
-          </Pressable>
-        </Link>
-      )}
-      keyExtractor={(post) => String(post.id)}
-      ItemSeparatorComponent={ItemSeparatorComponent}
-      ListHeaderComponent={ListHeaderComponent}
-      ListFooterComponent={
-        hasNextPage && isFetchingNextPage ? (
-          <View>
-            {Array.from({ length: 10 }).map((_, index) => (
-              <View key={index}>
-                <ItemSeparatorComponent />
-                <PostCardSkeleton />
-              </View>
-            ))}
-          </View>
-        ) : (
-          <Text style={styles.footer}>End of List</Text>
-        )
-      }
-      ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
-      onEndReached={() => {
-        if (hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+    <View style={styles.page}>
+      <FlatList
+        data={posts}
+        renderItem={({ item: post }) => (
+          <Link
+            href={`/posts/${post.id}`}
+            asChild
+          >
+            <Pressable style={styles.card}>
+              <PostCard post={post} />
+            </Pressable>
+          </Link>
+        )}
+        keyExtractor={(post) => String(post.id)}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={
+          hasNextPage && isFetchingNextPage ? (
+            <View>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <View key={index}>
+                  <ItemSeparatorComponent />
+                  <PostCardSkeleton />
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.footer}>End of List</Text>
+          )
         }
-      }}
-      onEndReachedThreshold={0.5}
-      refreshing={isRefetching}
-      onRefresh={refetch}
-    />
+        ListEmptyComponent={<Text style={styles.empty}>No Post(s) found</Text>}
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        refreshing={isRefetching}
+        onRefresh={refetch}
+      />
+    </View>
   );
 };
 

@@ -6,6 +6,10 @@ import { PostCard } from '@/components';
 import { Post } from '@/lib/types';
 
 const styles = StyleSheet.create({
+  page: {
+    padding: 8,
+    flex: 1,
+  },
   header: {
     marginBlockEnd: 16,
     alignSelf: 'center',
@@ -62,12 +66,12 @@ const PostPage = () => {
   }
 
   return (
-    <>
+    <View style={styles.page}>
       <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
         <PostCard post={data ?? null} />
       </View>
-    </>
+    </View>
   );
 };
 
