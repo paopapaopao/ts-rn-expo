@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 24,
   },
-  loadingView: {
+  errorView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loadingText: {
+  errorText: {
     fontSize: 20,
     fontStyle: 'italic',
   },
@@ -54,8 +54,8 @@ const PostsPage = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-    refetch,
     isRefetching,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['posts'],
     queryFn: async ({ pageParam }) => {
@@ -65,9 +65,9 @@ const PostsPage = () => {
 
       const data: {
         posts: Post[];
-        total: number;
         skip: number;
         limit: number;
+        total: number;
       } = await response.json();
 
       return data;
@@ -80,8 +80,6 @@ const PostsPage = () => {
       return pageParam;
     },
   });
-
-  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   if (isPending) {
     return (
@@ -97,11 +95,13 @@ const PostsPage = () => {
 
   if (isError) {
     return (
-      <View style={styles.loadingView}>
-        <Text style={styles.loadingText}>{`Error: ${error?.message}`}</Text>
+      <View style={styles.errorView}>
+        <Text style={styles.errorText}>{`Error: ${error?.message}`}</Text>
       </View>
     );
   }
+
+  const posts = data.pages.flatMap((page) => page.posts);
 
   return (
     <FlatList
