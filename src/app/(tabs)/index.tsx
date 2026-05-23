@@ -1,3 +1,4 @@
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -43,6 +44,17 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 20,
     fontStyle: 'italic',
+  },
+  fab: {
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '50%',
+    backgroundColor: 'gray',
   },
 });
 
@@ -148,6 +160,16 @@ const HomePage = () => {
         refreshing={isRefetching}
         onRefresh={refetch}
       />
+      <Pressable
+        style={styles.fab}
+        onPress={() => {}}
+      >
+        <MaterialDesignIcons
+          name='arrow-up'
+          size={24}
+          color='white'
+        />
+      </Pressable>
     </View>
   );
 };
