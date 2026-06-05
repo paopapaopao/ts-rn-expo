@@ -1,6 +1,6 @@
 import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -46,10 +46,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontStyle: 'italic',
   },
-  fab: {
+  fabView: {
     position: 'absolute',
     right: 8,
     bottom: 8,
+    gap: 4,
+  },
+  fab: {
     width: 40,
     height: 40,
     justifyContent: 'center',
@@ -100,6 +103,8 @@ const HomePage = () => {
 
   const [isShown, setIsShown] = useState(false);
   const flatListRef = useRef<FlatList<Post>>(null);
+
+  const router = useRouter();
 
   if (isPending) {
     return (
@@ -170,20 +175,34 @@ const HomePage = () => {
         refreshing={isRefetching}
         onRefresh={refetch}
       />
-      {isShown && (
+      <View style={styles.fabView}>
+        {isShown && (
+          <Pressable
+            style={styles.fab}
+            onPress={() => {
+              flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+            }}
+          >
+            <MaterialDesignIcons
+              name='chevron-double-up'
+              size={24}
+              color='white'
+            />
+          </Pressable>
+        )}
         <Pressable
           style={styles.fab}
           onPress={() => {
-            flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+            router.push('/posts/form');
           }}
         >
           <MaterialDesignIcons
-            name='arrow-up'
+            name='plus'
             size={24}
             color='white'
           />
         </Pressable>
-      )}
+      </View>
     </View>
   );
 };
