@@ -14,6 +14,10 @@ const Layout = () => {
           name='posts/[id]'
           options={{ title: 'Post Details' }}
         />
+        <Stack.Screen
+          name='posts/form'
+          options={{ title: 'Post Form' }}
+        />
       </Stack>
     </Provider>
   );

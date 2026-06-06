@@ -52,7 +52,6 @@ const PostPage = () => {
   if (isPending) {
     return (
       <View style={styles.page}>
-        <Text style={styles.header}>{`Post ${id} Details`}</Text>
         <PostCardSkeleton />
       </View>
     );
@@ -68,7 +67,6 @@ const PostPage = () => {
 
   return (
     <View style={styles.page}>
-      <Text style={styles.header}>{`Post ${id} Details`}</Text>
       <View style={styles.card}>
         <PostCard post={data ?? null} />
       </View>
